@@ -1,32 +1,38 @@
 BrightSide
 ==========
 
-BrightSide is a simple tool for proxing Selenium grid sessions. It's designed for running browser containers in a Kubernetes cluster, but it can be extended for proxying any Selenium grid session.
+BrightSide is a simple stateless service for running browser containers in Kubernetes. It can be used as a Selenium grid replacement as a part of your testing infrastructure.
 
 ## Usage
 
-### Python 3
+### Python 3 (for Seleniug grid and Docker only)
 ```bash
 pip install -r requirements.txt
 python app.py
 ```
 
+### Kubernetes
+
+1. Deploy Brightside pod to your Kubernetes cluster. 
+    ```bash
+    kubectl apply -f src/platforms/k8s/deployments/brightside.yaml
+    ```
+2. Create a service for Brightside pod or connect to it from the inside of the cluster.
+
 ### Docker 
 **TBD**
 
-## Supported platforms
-
-- **Selenium grid** (not very useful, but OK as a proof of concept)
-- **Docker** - creating and managing containers with browsers
-- **Kubernetes** - Run Brightside pod in a Kubernetes cluster and it will create and manage browser pods on-demand
+## Browser images 
+Right now, it supports only [standalone-chrome](https://hub.docker.com/r/selenium/standalone-chrome).
+**TBD**
 
 ## TODO
 
 - [ ] Error handling
-- [ ] Parametrized configuration
+- [ ] Browser images
 - [ ] Tests
 - [ ] Logging
-- [ ] App dockerization
+- [ ] Helm chart
 
 ## Contributing
 

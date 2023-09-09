@@ -28,17 +28,15 @@ roleRef:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: pod-creator-pod
+  name: brightside-pod
 spec:
   serviceAccountName: pod-creator
   containers:
   - name: brightside
-    image: python:latest
-    command: ["/bin/sh", "-c", "cd /app ; pip install -r requirements.txt ; python app.py"] 
-    stdin: true
-    # imagePullPolicy: Never # for localy built image 
+    image: vmaksimenko/brightside:0.1
+    # command: [""] 
     ports:
-      - containerPort: 5000
+      - containerPort: 4444
     volumeMounts:
       - name: app
         mountPath: /app
