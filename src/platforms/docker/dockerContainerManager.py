@@ -2,9 +2,11 @@ import docker
 from src.utils.network_utils import find_free_port
 
 class DockerContainerManager: 
-    docker_client = docker.from_env()
 
-    def create_browser_container(browser_name='chrome', version='latest'):
+    def __init__(self):
+        self.docker_client = docker.from_env()
+
+    def create_browser_container(self, browser_name="chrome", version="latest"):
         """
         Create a browser container
 
@@ -29,10 +31,10 @@ class DockerContainerManager:
         }
 
         # TODO: Add error handling here
-        container = DockerContainerManager.docker_client.containers.run(**container_settings)
+        container = self.docker_client.containers.run(**container_settings)
         return (container.id, selenium_grid_url)
 
-    def delete_browser_container(container_id):
+    def delete_browser_container(self, container_id):
         """
         Remove a browser container
 
@@ -41,7 +43,7 @@ class DockerContainerManager:
             :return: None  
         """
 
-        container = DockerContainerManager.docker_client.containers.get(container_id)
+        container = self.docker_client.containers.get(container_id)
         container.stop()
         container.remove()
     

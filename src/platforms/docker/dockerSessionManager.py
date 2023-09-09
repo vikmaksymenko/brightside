@@ -1,4 +1,3 @@
-import time
 from .dockerContainerManager import DockerContainerManager
 from ..abstractSessionManager import AbstractSessionManager
 from ..gridApiHelper import GridHelper
@@ -7,6 +6,7 @@ from ...utils.selenium_grid_utils import wait_for_grid_4_availability
 class DockerSessionManager(AbstractSessionManager):
     def __init__(self):
         self.containers = {}
+        self.container_manager = DockerContainerManager()
 
     def create_session(self, request):
         """
@@ -19,7 +19,7 @@ class DockerSessionManager(AbstractSessionManager):
           :return: The response from the Selenium Grid hub
         """
 
-        container_id, grid_url = DockerContainerManager.create_browser_container()
+        container_id, grid_url = self.container_manager.create_browser_container()
         self.containers[container_id] = grid_url
 
         wait_for_grid_4_availability(grid_url)
@@ -63,7 +63,7 @@ class DockerSessionManager(AbstractSessionManager):
 
         """
         container_id = self.__parse_session_id(session_id)[0]
-        DockerContainerManager.delete_browser_container(container_id)
+        self.container_manager.delete_browser_container(container_id)
         return GridHelper.empty_response
     
     def __parse_session_id(self, session_id):
