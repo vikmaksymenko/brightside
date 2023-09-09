@@ -1,4 +1,5 @@
 requests
 flask
 docker
+kubernetes
 selenium

@@ -22,9 +22,10 @@ python app.py
 
 ## TODO
 
-- [ ] Docker support
-- [ ] Kubernetes support
+- [x] Docker support
+- [x] Kubernetes support
 - [ ] Parametrized configuration
 - [ ] Tests
 - [ ] Error handling
 - [ ] Logging
+- [ ] App dockerization
