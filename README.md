@@ -19,3 +19,12 @@ python app.py
 - Selenium grid (not very useful, but OK as a proof of concept)
 - Docker (creating and managing containers with browsers)
 - Kubernetes - **TBD**
+
+## TODO
+
+- [ ] Docker support
+- [ ] Kubernetes support
+- [ ] Parametrized configuration
+- [ ] Tests
+- [ ] Error handling
+- [ ] Logging

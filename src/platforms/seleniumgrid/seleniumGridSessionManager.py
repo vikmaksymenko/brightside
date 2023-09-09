@@ -1,5 +1,5 @@
-from platforms.abstractSessionManager import AbstractSessionManager
-from gridApiHelper import GridHelper
+from src.platforms.abstractSessionManager import AbstractSessionManager
+from src.platforms.gridApiHelper import GridHelper
 
 class SeleniumGridSessionManager(AbstractSessionManager):
 

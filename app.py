@@ -1,10 +1,10 @@
 from flask import Flask, request
 
-from platformFactory import PlatformFactory
+from src.platforms.platformFactory import PlatformFactory
 
 app = Flask(__name__)
 
-platform = PlatformFactory.platformFor("selenium_grid")
+platform = PlatformFactory.platformFor('docker')
 
 @app.route('/session', methods=['POST'])
 def create_session():

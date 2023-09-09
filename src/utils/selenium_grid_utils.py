@@ -30,7 +30,7 @@ def is_grid_4_available(grid_url):
     """
 
     try:
-        response = requests.get("http://localhost:4444/status")
+        response = requests.get(f"{grid_url}/status")
         return response.status_code == 200 and response.json()["value"]["ready"]
     except:
         return False
