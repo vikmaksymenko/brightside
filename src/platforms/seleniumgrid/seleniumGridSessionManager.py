@@ -15,7 +15,7 @@ class SeleniumGridSessionManager(AbstractSessionManager):
           :return: The response from the Selenium Grid hub
         """
 
-        return GridHelper.api_request(self.url + '/session', request)
+        return GridHelper.api_request(self.url + "/session", request)
 
 
     def proxy_requests(self, session_id, path, request):

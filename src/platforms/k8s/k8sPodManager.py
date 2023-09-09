@@ -31,6 +31,7 @@ class K8sPodManager:
                 containers=[
                     client.V1Container(
                         name=name,
+                        # TODO: Add support for custom images and capabilities
                         image=f"selenium/standalone-{browser_name}:{version}",
                         ports=[
                             client.V1ContainerPort(container_port=4444),
@@ -42,9 +43,7 @@ class K8sPodManager:
         )
 
         pod = self.api_instance.create_namespaced_pod(namespace, pod_spec)
-
         pod = self.wait_for_pod_status_running(name, namespace)
-
         return (name, f"http://{pod.status.pod_ip}:4444")
 
     def delete_browser_pod(self, pod_name, namespace="default"):

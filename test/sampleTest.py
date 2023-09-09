@@ -6,7 +6,7 @@ import time
 
 chrome_options = webdriver.ChromeOptions()
 driver = webdriver.Remote(
-    command_executor='http://localhost:5000',
+    command_executor="http://localhost:5000",
     options=chrome_options
 )
 

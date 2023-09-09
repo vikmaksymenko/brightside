@@ -1,5 +1,6 @@
 from src.platforms.abstractSessionManager import AbstractSessionManager
 
+
 class DummySessionManager(AbstractSessionManager):
     """
     Session manager for the debug purpose
@@ -11,15 +12,10 @@ class DummySessionManager(AbstractSessionManager):
 
           :param request: The request object from the Flask app
           :type request: Flask request object
-          :return: The response from the Selenium Grid hub
+          :return: Dummy response
         """
 
-        return {
-            "value": {
-                "sessionId": "dummy_session_id"
-            }
-        }
-
+        return {"value": {"sessionId": "dummy_session_id"}}
 
     def proxy_requests(self, session_id, path, request):
         """
@@ -31,7 +27,7 @@ class DummySessionManager(AbstractSessionManager):
             :type path: string
             :param request: The request object from the Flask app
             :type request: Flask request object
-            :return: The response from the Selenium Grid hub
+            :return: Dummy response with the request data
 
         """
 
@@ -41,9 +37,13 @@ class DummySessionManager(AbstractSessionManager):
             }
         }
 
-
     def delete_session(self, session_id, request):
-        return {
-            "value": 'deleted session'
-        }
-    
+        """
+        Deletes the session
+
+            :param sessionId: The session ID of the session to delete
+            :type sessionId: string
+            :return: Dummy response
+        """
+
+        return {"value": "deleted session"}

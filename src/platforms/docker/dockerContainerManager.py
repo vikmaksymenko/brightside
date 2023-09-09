@@ -1,8 +1,8 @@
 import docker
 from src.utils.network_utils import find_free_port
 
-class DockerContainerManager: 
 
+class DockerContainerManager:
     def __init__(self):
         self.docker_client = docker.from_env()
 
@@ -22,12 +22,9 @@ class DockerContainerManager:
         no_vnc_port = find_free_port()
 
         container_settings = {
-            "image": f"selenium/standalone-{browser_name}:{version}",  
+            "image": f"selenium/standalone-{browser_name}:{version}",
             "detach": True,
-            "ports": {
-                "4444/tcp": selenium_grid_port, 
-                "7900/tcp": no_vnc_port
-            },
+            "ports": {"4444/tcp": selenium_grid_port, "7900/tcp": no_vnc_port},
         }
 
         # TODO: Add error handling here
@@ -39,13 +36,10 @@ class DockerContainerManager:
         Remove a browser container
 
             :param containerId: The ID of the container to remove
-            :type containerId: string   
-            :return: None  
+            :type containerId: string
+            :return: None
         """
 
         container = self.docker_client.containers.get(container_id)
         container.stop()
         container.remove()
-    
-    
-

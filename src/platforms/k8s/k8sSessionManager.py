@@ -3,6 +3,7 @@ from ..abstractSessionManager import AbstractSessionManager
 from ..gridApiHelper import GridHelper
 from ...utils.selenium_grid_utils import wait_for_grid_4_availability
 
+
 class K8SSessionManager(AbstractSessionManager):
     def __init__(self):
         self.pods = {}
@@ -10,7 +11,7 @@ class K8SSessionManager(AbstractSessionManager):
 
     def create_session(self, request):
         """
-        Starts a browser container and starts session in it. 
+        Starts a browser container and starts session in it.
         Returns the response from the Selenium Grid hub with modified session ID
         Where session ID is a combination of container ID and session ID in the container
 
@@ -24,18 +25,17 @@ class K8SSessionManager(AbstractSessionManager):
 
         wait_for_grid_4_availability(grid_url)
 
-        response = GridHelper.api_request(grid_url + '/session', request)
+        response = GridHelper.api_request(grid_url + "/session", request)
 
         # TODO: Handle error response
-        session_id = response['value']['sessionId']
-        response['value']['sessionId'] = pod_name + session_id
+        session_id = response["value"]["sessionId"]
+        response["value"]["sessionId"] = pod_name + session_id
 
         return response
 
-
     def proxy_requests(self, session_id, path, request):
         """
-        Proxy requests to the pod. 
+        Proxy requests to the pod.
         The pod name is extracted from the session ID and the request is proxied to the container URL
 
             :param sessionId: The session ID of the session to proxy the request to
@@ -47,10 +47,12 @@ class K8SSessionManager(AbstractSessionManager):
             :return: The response from the Selenium Grid hub
 
         """
-        
+
         pod_name, browser_session_id = self.__parse_session_id(session_id)
         grid_url = self.pods[pod_name]
-        return GridHelper.api_request(f"{grid_url}/session/{browser_session_id}/{path}", request)
+        return GridHelper.api_request(
+            f"{grid_url}/session/{browser_session_id}/{path}", request
+        )
 
     def delete_session(self, session_id, request):
         """
@@ -65,6 +67,6 @@ class K8SSessionManager(AbstractSessionManager):
         pod_name = self.__parse_session_id(session_id)[0]
         self.pod_manager.delete_browser_pod(pod_name)
         return GridHelper.empty_response
-    
+
     def __parse_session_id(self, session_id):
         return (session_id[:32], session_id[32:])

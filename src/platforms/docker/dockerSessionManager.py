@@ -19,6 +19,9 @@ class DockerSessionManager(AbstractSessionManager):
           :return: The response from the Selenium Grid hub
         """
 
+        # TODO: Parse browser name and version from capabilities
+        # TODO: Support custom images
+        
         container_id, grid_url = self.container_manager.create_browser_container()
         self.containers[container_id] = grid_url
 
