@@ -26,8 +26,10 @@ def main():
     def proxy_requests(session_id, path):
         return platform.proxy_requests(session_id, path, request)
 
-    serve(app, host=args.host, port=args.port)
-    # app.run(debug=True, host="localhost", port=4444)
+    if args.debug:
+        app.run(debug=True, host=args.host, port=args.port)
+    else: 
+        serve(app, host=args.host, port=args.port)
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -36,6 +38,8 @@ def parse_args():
     parser.add_argument("--platform", default="k8s", help="Platform to use (default: k8s)")
     parser.add_argument("--host", default="127.0.0.1", help="Host to listen on (default: localhost)")
     parser.add_argument("--port", default=4444, help="Port to listen on (default: 4444)")
+    parser.add_argument("--debug", action='store_true', default=False, help="Run server in debug mode (default: False)")
+    # parser.set_defaults(debug=False)
     return parser.parse_args()
 
 

@@ -5,7 +5,7 @@ BrightSide is a simple stateless service for running browser containers in Kuber
 
 ## Usage
 
-### Python 3 (for Seleniug grid and Docker only)
+### Python 3.9+ (for Selenium grid and Docker only)
 ```bash
 pip install -r requirements.txt
 python app.py
