@@ -1,4 +1,4 @@
-from src.platforms.abstractSessionManager import AbstractSessionManager
+from abstractSessionManager import AbstractSessionManager
 
 
 class DummySessionManager(AbstractSessionManager):

@@ -20,7 +20,9 @@ python app.py
 2. Create a service for Brightside pod or connect to it from the inside of the cluster.
 
 ### Docker 
-**TBD**
+```
+docker run -it --rm -p 4444:4444 -v //var/run/docker.sock:/var/run/docker.sock --name brightside  vikmaksimenko/brightside:0.1 --platform docker --host $YOUR_HOST_OR_IP
+```
 
 ## Browser images 
 Right now, it supports only [standalone-chrome](https://hub.docker.com/r/selenium/standalone-chrome).

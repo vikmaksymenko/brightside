@@ -33,7 +33,8 @@ spec:
   serviceAccountName: pod-creator
   containers:
   - name: brightside
-    image: vmaksimenko/brightside:0.1
+    image: brightside:0.2
+    imagePullPolicy: Never
     # command: [""] 
     ports:
       - containerPort: 4444
