@@ -35,15 +35,15 @@ spec:
   - name: brightside
     image: brightside:0.2
     imagePullPolicy: Never
-    # command: [""] 
+    args: ["--host", "0.0.0.0"] 
     ports:
       - containerPort: 4444
-    volumeMounts:
-      - name: app
-        mountPath: /app
+  #   volumeMounts:
+  #     - name: app
+  #       mountPath: /app
 
-  volumes:
-  - name: app
-    hostPath:
-      path: /app
-      type: Directory
+  # volumes:
+  # - name: app
+  #   hostPath:
+  #     path: /app
+  #     type: Directory

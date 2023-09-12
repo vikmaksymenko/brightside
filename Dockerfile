@@ -11,3 +11,4 @@ COPY src src
 COPY app.py .
 
 ENTRYPOINT [ "python", "./app.py" ] 
+# ENTRYPOINT [ "/bin/bash" ]

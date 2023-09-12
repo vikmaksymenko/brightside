@@ -1,3 +1,4 @@
+import logging
 import requests
 import time
 
@@ -18,6 +19,7 @@ class GridHelper:
             :return: None
         """
 
+        logging.info(f"Waiting for Selenium Grid 4 to be available at {grid_url}")
         for i in range(timeout):
             if GridHelper.is_grid_4_available(grid_url):
                 return True
@@ -36,6 +38,7 @@ class GridHelper:
             :return: True if the Selenium Grid hub is available, False otherwise
         """
 
+        logging.info(f"Checking if Selenium Grid 4 is available at {grid_url}")
         try:
             response = requests.get(f"{grid_url}/status")
             return response.status_code == 200 and response.json()["value"]["ready"]

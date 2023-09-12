@@ -1,3 +1,4 @@
+import logging
 import requests
 
 from .sessionManagerFactory import SessionManagerFactory
@@ -31,10 +32,13 @@ class SessionRouter:
 
         GridHelper.wait_for_grid_4_availability(brightside_session.grid_url)
 
+        logging.info(f"Starting Selenium session on {brightside_session.host_id}")   
         response = self._api_request(brightside_session.grid_url + "/session", request)
         # TODO: Handle error response
 
         browser_session_id = response["value"]["sessionId"]
+        logging.info(f"Started Selenium session {browser_session_id} on {brightside_session.host_id}")
+
         brightside_id = brightside_session.host_id + browser_session_id
         self._sessions[brightside_id] = brightside_session
         response["value"]["sessionId"] = brightside_id
@@ -53,12 +57,21 @@ class SessionRouter:
             :type request: Flask request object
             :return: The response from the Selenium Grid hub
         """
+
         host_id, browser_session_id = self._parse_brightside_id(session_id)
-        brightside_session = self._find_session(host_id)
-        return self._api_request(
-            f"{brightside_session.grid_url}/session/{browser_session_id}/{path}",
-            request,
-        )
+
+        if session_id in self._sessions:
+            session = self._sessions[session_id]
+        else:
+            session = self._session_manager.find_host(host_id)
+
+        if session is None:
+            raise Exception(f"Session {session_id} not found")
+        
+        url = f"{session.grid_url}/session/{browser_session_id}/{path}"
+        logging.info(f"Forwarding request to {url}")
+        
+        return self._api_request(url,request)
 
     def delete_session(self, session_id, request):
         """
@@ -71,26 +84,6 @@ class SessionRouter:
         host_id, _ = self._parse_brightside_id(session_id)
         self._session_manager.terminate_host(host_id)
         return GridHelper.empty_response
-
-    def _find_session(self, session_id):
-        """
-        Searches for a session in the sessions dictionary.
-        If the session is not found, searching for the session in the session manager
-        and adding it to the sessions dictionary.
-        If the session is not found in the session manager, raise an exception.
-
-            :param sessionId: The Brightside session ID of the session to find
-            :type sessionId: string
-            :return: The session object
-        """
-
-        if session_id in self._sessions:
-            return self._sessions[session_id]
-
-        session = self._session_manager.find_host(session_id)
-        if session is None:
-            raise Exception(f"Session {session_id} not found")
-        return session
 
     def _cleanup_sessions_list(self):
         """

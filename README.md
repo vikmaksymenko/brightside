@@ -33,7 +33,6 @@ Right now, it supports only [standalone-chrome](https://hub.docker.com/r/seleniu
 - [ ] Error handling
 - [ ] Browser images
 - [ ] Tests
-- [ ] Logging
 - [ ] Helm chart
 
 ## Contributing

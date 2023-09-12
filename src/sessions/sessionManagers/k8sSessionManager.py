@@ -1,3 +1,4 @@
+import logging
 import time
 
 from uuid import uuid1
@@ -41,6 +42,7 @@ class K8SSessionManager(AbstractSessionManager):
         )
 
         pod = self.api_instance.create_namespaced_pod(self.namespace, pod_spec)
+        logging.info(f"Started pod {pod.metadata.name}")
         pod = self.wait_for_pod_status_running(name)
 
         return BrightsideSession(name, f"http://{pod.status.pod_ip}:4444")
@@ -54,7 +56,9 @@ class K8SSessionManager(AbstractSessionManager):
             :return: None
         """
 
+        logging.info(f"Removing pod {pod_name}")
         self.api_instance.delete_namespaced_pod(pod_name, self.namespace)
+        logging.info(f"Pod {pod_name} removed")
 
     def find_host(self, pod_name):
         """
@@ -64,15 +68,17 @@ class K8SSessionManager(AbstractSessionManager):
             :type host_id: string
             :return: The Brightside session
         """
+        logging.info(f"Searching for pod {pod_name}")
         pod_list = self.api_instance.list_namespaced_pod(self.namespace)
 
         for pod in pod_list.items:
             if pod.metadata.name == pod_name:
+                logging.info(f"Found pod {pod_name} with IP {pod.status.pod_ip}")
                 return BrightsideSession(pod_name, f"http://{pod.status.pod_ip}:4444")
 
         return None
 
-    def wait_for_pod_status_running(self, pod_name, timeout_seconds=30):
+    def wait_for_pod_status_running(self, pod_name, timeout_seconds=600):
         """
         Wait for a pod to be running
 
@@ -81,6 +87,7 @@ class K8SSessionManager(AbstractSessionManager):
             :return: V1Pod
         """
 
+        logging.info(f"Waiting for pod {pod_name} to reach Running state")
         start_time = time.time()
         while True:
             try:
@@ -88,6 +95,7 @@ class K8SSessionManager(AbstractSessionManager):
                     name=pod_name, namespace=self.namespace
                 )
 
+                logging.info(f"Pod {pod_name} status: {pod.status.phase}")
                 if pod.status.phase == "Running":
                     return pod
 
@@ -95,10 +103,12 @@ class K8SSessionManager(AbstractSessionManager):
                     break
 
             except client.exceptions.ApiException as e:
-                print(f"Error getting pod status: {e}")
+                raise RuntimeError(f"Error getting pod status: {e}")
 
             time.sleep(1)
 
+        logging.info(f"Pod {pod_name} did not reach Running state in {timeout_seconds} seconds, deleting pod")
+        self.terminate_host(pod_name)
         raise TimeoutError(
             f"Timeout waiting for pod {pod_name} in namespace {self.namespace} to reach Running state."
         )

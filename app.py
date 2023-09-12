@@ -1,14 +1,23 @@
 import argparse
+import logging
 
 from flask import Flask, request
 from waitress import serve
+from paste.translogger import TransLogger
+
 
 from src.sessions.sessionRouter import SessionRouter
 
 def main():
-    app = Flask(__name__)
-
     args = parse_args()
+
+    log_level = getattr(logging, args.log_level)
+    logging.basicConfig(
+        format='%(asctime)s [%(levelname)s] [%(name)s] [%(process)d] [%(thread)d] - %(message)s',
+        level=log_level
+    )
+
+    app = Flask(__name__)
 
     session_router = SessionRouter(args.platform)
  
@@ -29,7 +38,8 @@ def main():
     if args.debug:
         app.run(debug=True, host=args.host, port=args.port)
     else: 
-        serve(app, host=args.host, port=args.port)
+        # serve(app, host=args.host, port=args.port)
+        serve(TransLogger(app, setup_console_handler=False), host=args.host, port=args.port)
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -39,6 +49,8 @@ def parse_args():
     parser.add_argument("--host", default="127.0.0.1", help="Host to listen on (default: localhost)")
     parser.add_argument("--port", default=4444, help="Port to listen on (default: 4444)")
     parser.add_argument("--debug", action='store_true', default=False, help="Run server in debug mode (default: False)")
+    parser.add_argument('--log-level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                    default='INFO', help='Set the log level (default: INFO)')
     return parser.parse_args()
 
 
