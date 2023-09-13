@@ -8,12 +8,12 @@ from ..brightsideSession import BrightsideSession
 from .abstractSessionManager import AbstractSessionManager
 
 class K8SSessionManager(AbstractSessionManager):
-    def __init__(self):
+    def __init__(self) -> None:
         config.load_incluster_config()
         self.api_instance = client.CoreV1Api()
         self.namespace = "default"  # TODO: Make this configurable
 
-    def setup_host(self, request):
+    def setup_host(self, request) -> BrightsideSession:
         """
         Create a browser pod
 
@@ -47,7 +47,7 @@ class K8SSessionManager(AbstractSessionManager):
 
         return BrightsideSession(name, f"http://{pod.status.pod_ip}:4444")
 
-    def terminate_host(self, pod_name):
+    def terminate_host(self, pod_name) -> None:
         """
         Remove a browser pod
 
@@ -60,7 +60,7 @@ class K8SSessionManager(AbstractSessionManager):
         self.api_instance.delete_namespaced_pod(pod_name, self.namespace)
         logging.info(f"Pod {pod_name} removed")
 
-    def find_host(self, pod_name):
+    def find_host(self, pod_name) -> BrightsideSession:
         """
         Find a browser pod by pod ID and return it's info
 
@@ -78,7 +78,7 @@ class K8SSessionManager(AbstractSessionManager):
 
         return None
 
-    def wait_for_pod_status_running(self, pod_name, timeout_seconds=600):
+    def wait_for_pod_status_running(self, pod_name, timeout_seconds=600) -> client.V1Pod:
         """
         Wait for a pod to be running
 

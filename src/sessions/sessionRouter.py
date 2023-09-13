@@ -4,8 +4,9 @@ import requests
 from .sessionManagerFactory import SessionManagerFactory
 from ..utils.selenium_grid_utils import GridHelper
 
+
 class SessionRouter:
-    def __init__(self, platform):
+    def __init__(self, platform) -> None:
         """
         Initialize the session router with the platform to use.
         Session router is responsible for creating, deleting and proxying requests to the browser sessions
@@ -17,7 +18,7 @@ class SessionRouter:
         self._session_manager = SessionManagerFactory.platformFor(platform)
         self._sessions = {}
 
-    def create_session(self, request):
+    def create_session(self, request) -> requests.Response:
         """
         Create a session in the platform and add it to the sessions dictionary
         As a key, use the Brightside session ID.
@@ -32,12 +33,14 @@ class SessionRouter:
 
         GridHelper.wait_for_grid_4_availability(brightside_session.grid_url)
 
-        logging.info(f"Starting Selenium session on {brightside_session.host_id}")   
+        logging.info(f"Starting Selenium session on {brightside_session.host_id}")
         response = self._api_request(brightside_session.grid_url + "/session", request)
         # TODO: Handle error response
 
         browser_session_id = response["value"]["sessionId"]
-        logging.info(f"Started Selenium session {browser_session_id} on {brightside_session.host_id}")
+        logging.info(
+            f"Started Selenium session {browser_session_id} on {brightside_session.host_id}"
+        )
 
         brightside_id = brightside_session.host_id + browser_session_id
         self._sessions[brightside_id] = brightside_session
@@ -45,7 +48,7 @@ class SessionRouter:
 
         return response
 
-    def proxy_requests(self, session_id, path, request):
+    def proxy_requests(self, session_id, path, request) -> requests.Response:
         """
         Proxy requests to the browser session in the platform
 
@@ -67,13 +70,13 @@ class SessionRouter:
 
         if session is None:
             raise Exception(f"Session {session_id} not found")
-        
+
         url = f"{session.grid_url}/session/{browser_session_id}/{path}"
         logging.info(f"Forwarding request to {url}")
-        
-        return self._api_request(url,request)
 
-    def delete_session(self, session_id, request):
+        return self._api_request(url, request)
+
+    def delete_session(self, session_id, request) -> requests.Response:
         """
         Deletes the session in the platform and removes it from the sessions dictionary
 
@@ -85,7 +88,7 @@ class SessionRouter:
         self._session_manager.terminate_host(host_id)
         return GridHelper.empty_response
 
-    def _cleanup_sessions_list(self):
+    def _cleanup_sessions_list(self) -> None:
         """
         Remove sessions from the sessions dictionary that are not present in the session manager
         Runs on schedule in separate thread
@@ -93,12 +96,12 @@ class SessionRouter:
 
         pass
 
-    def _api_request(self, url, request):
+    def _api_request(self, url, request) -> requests.Response:
         return requests.request(
             request.method, url, data=request.data, headers=request.headers
         ).json()
 
-    def _parse_brightside_id(self, brightside_id):
+    def _parse_brightside_id(self, brightside_id) -> (str, str):
         """
         Parse the Brightside session ID into the host ID and the Selenium session ID
 

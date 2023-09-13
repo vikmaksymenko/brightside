@@ -8,7 +8,7 @@ class GridHelper:
         "value": None,
     }
 
-    def wait_for_grid_4_availability(grid_url, timeout=30):
+    def wait_for_grid_4_availability(grid_url, timeout=30) -> None:
         """
         Waits for the Selenium Grid 4 hub to be available
 
@@ -29,7 +29,7 @@ class GridHelper:
             f"Timed out waiting for Selenium Grid 4 to be available at {grid_url}"
         )
 
-    def is_grid_4_available(grid_url):
+    def is_grid_4_available(grid_url) -> bool:
         """
         Checks if the Selenium Grid hub is available
 

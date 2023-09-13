@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
 
+from sessions.brightsideSession import BrightsideSession
+
+
 class AbstractSessionManager(ABC):
     @abstractmethod
-    def setup_host(self, request):
+    def setup_host(self, request) -> BrightsideSession:
         """
         Prepares a host
 
@@ -11,11 +14,11 @@ class AbstractSessionManager(ABC):
           :return: The Brightside session
         """
         pass
-    
+
     @abstractmethod
-    def terminate_host(self, host_id):
+    def terminate_host(self, host_id) -> None:
         """
-        Deletes the session 
+        Deletes the session
 
             :param host_id: The session ID of the session to delete
             :type host_id: string
@@ -25,7 +28,7 @@ class AbstractSessionManager(ABC):
         pass
 
     @abstractmethod
-    def find_host(self, host_id): 
+    def find_host(self, host_id) -> BrightsideSession:
         """
         Find a host by host ID and return it's info
             :param host_id: The session ID of the session to find
@@ -33,4 +36,3 @@ class AbstractSessionManager(ABC):
             :return: The Brightside session
         """
         pass
-    
